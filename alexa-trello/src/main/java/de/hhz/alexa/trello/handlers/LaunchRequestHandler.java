@@ -18,6 +18,8 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.Response;
 
+import de.hhz.alexa.trello.utils.Constant;
+
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.requestType;
@@ -30,7 +32,7 @@ public class LaunchRequestHandler implements RequestHandler {
 
 	public Optional<Response> handle(HandlerInput input) {
 
-		String speechText = "Willkomen zum trello boad task planer skill.";
-		return input.getResponseBuilder().withSpeech(speechText).withReprompt("Öffne Meine Tasks oder die Hilfe").build();
+		String speechText = "IOT Board geöffnet. Was soll ich tun?";
+		return input.getResponseBuilder().withSpeech(speechText).withReprompt(Constant.REPROMT).build();
 	}
 }

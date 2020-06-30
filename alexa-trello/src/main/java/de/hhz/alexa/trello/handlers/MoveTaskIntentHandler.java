@@ -7,6 +7,8 @@ import com.amazon.ask.request.RequestHelper;
 
 import de.hhz.alexa.trello.utils.Constant;
 import de.hhz.alexa.trello.utils.TrelloController;
+import kong.unirest.HttpResponse;
+import unirest.shaded.org.apache.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -25,22 +27,36 @@ public class MoveTaskIntentHandler implements RequestHandler {
 		String toList = requestHelper.getSlotValue("toList").get();
 		String task = requestHelper.getSlotValue("task").get();
 
-		mStringBuilder = new StringBuilder();
-		mStringBuilder.append("Task");
-		mStringBuilder.append(" ");
-		mStringBuilder.append(task);
-		mStringBuilder.append(" ");
-		mStringBuilder.append("wurde auf  ");
-		mStringBuilder.append(toList);
-		mStringBuilder.append(" gesetzt.");
+		
 		try {
-			new TrelloController().moveCardToList(task,toList, Constant.BOARD);
+			HttpResponse<String> response = new TrelloController().moveCardToList(task,toList, Constant.BOARD);
+			if (response.getStatus() == HttpStatus.SC_ACCEPTED) {
+				mStringBuilder = new StringBuilder();
+				mStringBuilder.append("Task");
+				mStringBuilder.append(" ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" ");
+				mStringBuilder.append("wurde auf  ");
+				mStringBuilder.append(toList);
+				mStringBuilder.append(" gesetzt.");
+			} else {
+				mStringBuilder = new StringBuilder();
+				mStringBuilder.append("Task");
+				mStringBuilder.append(" ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" ");
+				mStringBuilder.append("könnte nicht geschoben werden.");
+			}
+
 
 		} catch (Exception e) {
 			mStringBuilder = new StringBuilder();
-			mStringBuilder.append("Fehler Erstellung des Tasks");
+			mStringBuilder.append("Ein Fehler is bei verschiebung des Task");
+			mStringBuilder.append(task);
+			mStringBuilder.append(" aufgetretten");
+
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
 	}
 
 }

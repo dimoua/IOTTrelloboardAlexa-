@@ -27,10 +27,10 @@ public class CancelandStopIntentHandler implements RequestHandler {
     }
 
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "Goodbye";
+        String speechText = "IOT Board schlieﬂ";
         return input.getResponseBuilder()
                 .withSpeech(speechText)
-                .withSimpleCard("HelloWorld", speechText)
+                .withSimpleCard("IOT Board", speechText)
                 .build();
     }
 }

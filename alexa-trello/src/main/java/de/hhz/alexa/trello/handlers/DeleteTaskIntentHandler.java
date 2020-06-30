@@ -39,13 +39,23 @@ public class DeleteTaskIntentHandler implements RequestHandler {
 				mStringBuilder.append("wurde von");
 				mStringBuilder.append(list);
 				mStringBuilder.append(" gelöscht.");
+			} else {
+				mStringBuilder.append("Task");
+				mStringBuilder.append(" ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" ");
+				mStringBuilder.append("könnte nicht gelöscht werden");
 			}
 
 		} catch (Exception e) {
 			mStringBuilder = new StringBuilder();
-			mStringBuilder.append("Task könnte nicht gelöscht werden");
+			mStringBuilder.append("Task könnte nicht gelöscht werden");mStringBuilder.append("Task");
+			mStringBuilder.append(" ");
+			mStringBuilder.append(task);
+			mStringBuilder.append(" ");
+			mStringBuilder.append("könnte nicht gelöscht werden");
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
 	}
 
 }

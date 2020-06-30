@@ -33,6 +33,6 @@ public class ListTasksIntentHandler implements RequestHandler {
 		} catch (Exception e) {
 			mStringBuilder.append(e.getMessage());
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt("Wollen Sie etwas anders machen").build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
 	}
 }

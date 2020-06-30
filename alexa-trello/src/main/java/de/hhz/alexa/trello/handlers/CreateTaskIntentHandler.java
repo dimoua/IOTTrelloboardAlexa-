@@ -7,6 +7,8 @@ import com.amazon.ask.request.RequestHelper;
 
 import de.hhz.alexa.trello.utils.Constant;
 import de.hhz.alexa.trello.utils.TrelloController;
+import kong.unirest.HttpResponse;
+import unirest.shaded.org.apache.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -22,11 +24,12 @@ public class CreateTaskIntentHandler implements RequestHandler {
 	public Optional<Response> handle(HandlerInput input) {
 
 		RequestHelper requestHelper = RequestHelper.forHandlerInput(input);
-		String trelloList = requestHelper.getSlotValue("liste").get();
+		String trelloList = requestHelper.getSlotValue("list").get();
 		String task = requestHelper.getSlotValue("task").get();
 
 		try {
-			new TrelloController().createCard(task, trelloList, Constant.BOARD);
+			HttpResponse<String> response =new TrelloController().createCard(task, trelloList, Constant.BOARD);
+			if(response.getStatus() == HttpStatus.SC_ACCEPTED) {
 			mStringBuilder = new StringBuilder();
 			mStringBuilder.append("Task");
 			mStringBuilder.append(" ");
@@ -35,12 +38,18 @@ public class CreateTaskIntentHandler implements RequestHandler {
 			mStringBuilder.append("wurde auf ");
 			mStringBuilder.append(trelloList);
 			mStringBuilder.append(" erstellt.");
-
+			
+			} else {
+				mStringBuilder.append("Task ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" könnte nicht erstellt werden");
+			}
 		} catch (Exception e) {
-			mStringBuilder = new StringBuilder();
-			mStringBuilder.append("Fehler Erstellung des Tasks");
+			mStringBuilder.append("Task ");
+			mStringBuilder.append(task);
+			mStringBuilder.append(" könnte nicht erstellt werden");
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
 	}
 
 }
