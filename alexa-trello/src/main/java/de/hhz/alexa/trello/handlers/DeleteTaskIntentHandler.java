@@ -7,6 +7,8 @@ import com.amazon.ask.request.RequestHelper;
 
 import de.hhz.alexa.trello.utils.Constant;
 import de.hhz.alexa.trello.utils.TrelloController;
+import kong.unirest.HttpResponse;
+import unirest.shaded.org.apache.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -26,15 +28,18 @@ public class DeleteTaskIntentHandler implements RequestHandler {
 		String list = requestHelper.getSlotValue("list").get();
 
 		mStringBuilder = new StringBuilder();
-		mStringBuilder.append("Task");
-		mStringBuilder.append(" ");
-		mStringBuilder.append(task);
-		mStringBuilder.append(" ");
-		mStringBuilder.append("wurde von");
-		mStringBuilder.append(list);
-		mStringBuilder.append(" gelöscht.");
+		
 		try {
-			new TrelloController().deleteCard(task, list, Constant.BOARD);
+			HttpResponse<String> response = new TrelloController().deleteCard(task, list, Constant.BOARD);
+			if (response.getStatus() == HttpStatus.SC_ACCEPTED) {
+				mStringBuilder.append("Task");
+				mStringBuilder.append(" ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" ");
+				mStringBuilder.append("wurde von");
+				mStringBuilder.append(list);
+				mStringBuilder.append(" gelöscht.");
+			}
 
 		} catch (Exception e) {
 			mStringBuilder = new StringBuilder();
