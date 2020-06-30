@@ -28,7 +28,7 @@ public class TrelloController {
 		this.loadBoards();
 	}
 
-	public Map<String, String> listCards(final String board, final String list) {
+	public HttpResponse<JsonNode> getListOfCards(final String board, final String list) {
 		String url = "lists/";
 		String identifier = "/cards";
 		this.loadLists(board);
@@ -44,7 +44,11 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		HttpResponse<JsonNode> response = Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+		return Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+	}
+
+	public Map<String, String> listCards(final String board, final String list) {
+		HttpResponse<JsonNode> response = getListOfCards(board, list);
 		JsonNode node = response.getBody();
 		JSONArray a = node.getArray();
 		for (Object o : a) {
@@ -60,7 +64,7 @@ public class TrelloController {
 		return listCards;
 	}
 
-	public Map<String, String> listBoardCards(final String board) {
+	public HttpResponse<JsonNode> getListBoardCards(final String board) {
 		String url = "boards/";
 		String identifier = "/cards";
 		this.loadLists(board);
@@ -76,7 +80,11 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		HttpResponse<JsonNode> response = Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+		return Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+	}
+
+	public Map<String, String> listBoardCards(final String board) {
+		HttpResponse<JsonNode> response = getListBoardCards(board);
 		JsonNode node = response.getBody();
 		JSONArray a = node.getArray();
 		for (Object o : a) {
@@ -92,7 +100,7 @@ public class TrelloController {
 		return listCards;
 	}
 
-	public void loadBoards() {
+	public HttpResponse<JsonNode> initBoards() {
 		boards = new HashMap<String, String>();
 		String url = "members/me/boards";
 		StringBuilder sb = new StringBuilder();
@@ -104,7 +112,13 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		HttpResponse<JsonNode> response = Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+		return Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+	}
+
+	public void loadBoards() {
+		boards = new HashMap<String, String>();
+
+		HttpResponse<JsonNode> response = initBoards();
 		JsonNode node = response.getBody();
 		JSONArray a = node.getArray();
 		for (Object o : a) {
@@ -118,7 +132,7 @@ public class TrelloController {
 		}
 	}
 
-	public void createCard(final String name, final String list, String board) {
+	public HttpResponse<String> createCard(final String name, final String list, String board) {
 		String url = "cards";
 		StringBuilder sb = new StringBuilder();
 		sb.append(baseUrl);
@@ -130,11 +144,11 @@ public class TrelloController {
 		sb.append("token=");
 		sb.append(token);
 		this.loadLists(board);
-		Unirest.post(sb.toString()).queryString("idList", this.trelloLists.get(list)).queryString("name", name)
+		return Unirest.post(sb.toString()).queryString("idList", this.trelloLists.get(list)).queryString("name", name)
 				.asString();
 	}
 
-	public void moveCardToList(String cards, String toList, String board) {
+	public HttpResponse<String> moveCardToList(String cards, String toList, String board) {
 		this.loadLists(board);
 		this.listBoardCards(board);
 		String url = "cards/";
@@ -148,11 +162,11 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		Unirest.put(sb.toString()).queryString("idList", this.trelloLists.get(toList)).asString();
+		return Unirest.put(sb.toString()).queryString("idList", this.trelloLists.get(toList)).asString();
 
 	}
 
-	public void deleteCard(final String cards, final String trelloList, final String board) {
+	public HttpResponse<String> deleteCard(final String cards, final String trelloList, final String board) {
 		String url = "cards/";
 		this.listCards(board, trelloList);
 		StringBuilder sb = new StringBuilder();
@@ -165,10 +179,10 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		Unirest.delete(sb.toString()).asString();
+		return Unirest.delete(sb.toString()).asString();
 	}
 
-	public void assignCardToUser(String username, String card, String board, String list) {
+	public HttpResponse<String> assignCardToUser(String username, String card, String board, String list) {
 		String url = "cards/";
 		this.listMembers(board);
 		this.listCards(board, list);
@@ -183,11 +197,10 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		Unirest.put(sb.toString()).queryString("idMembers", this.members.get(username))
-				.asString();
+		return Unirest.put(sb.toString()).queryString("idMembers", this.members.get(username)).asString();
 	}
 
-	public void loadLists(final String board) {
+	public HttpResponse<JsonNode> initLists(final String board) {
 		this.trelloLists = new HashMap<String, String>();
 		String url = "boards/";
 		String identifier = "/lists";
@@ -202,7 +215,12 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		HttpResponse<JsonNode> response = Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+		return Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+	}
+
+	public void loadLists(final String board) {
+		this.trelloLists = new HashMap<String, String>();
+		HttpResponse<JsonNode> response = initLists(board);
 		JsonNode node = response.getBody();
 		JSONArray a = node.getArray();
 		for (Object o : a) {
@@ -217,7 +235,7 @@ public class TrelloController {
 		}
 	}
 
-	public void listMembers(String board) {
+	public HttpResponse<JsonNode> initListOfMembers(String board) {
 		String url = "boards/";
 		members = new HashMap<String, String>();
 		StringBuilder sb = new StringBuilder();
@@ -231,7 +249,11 @@ public class TrelloController {
 		sb.append("&");
 		sb.append("token=");
 		sb.append(token);
-		HttpResponse<JsonNode> response = Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+		return Unirest.get(sb.toString()).header(ACCEPT, APPLICATION_TYPE).asJson();
+	}
+
+	public void listMembers(String board) {
+		HttpResponse<JsonNode> response = initListOfMembers(board);
 		JsonNode node = response.getBody();
 		JSONArray a = node.getArray();
 		for (Object o : a) {
@@ -258,18 +280,18 @@ public class TrelloController {
 
 	}
 
-//	public static void main(String[] args) {
-//		TrelloController trello = new TrelloController();
-//		StringBuilder mStringBuilder;
-//		// trello.createCard("test", "Meine Tasks","IOT");
-//		// Map<String, String> map = trello.listCards("IOT", "Meine Tasks");
-//		// map.forEach((key, value) -> System.out.println(key + ":" + value));
-//		// System.out.println(trello.toString(trello.listCards("IOT", "Meine
-//		// Tasks")));
-//		// trello.moveCardToList("besuch", "fertig", "IOT");
-//		// trello.deleteCard("trinken", "To Do", "IOT");
-//		// trello.listMembers("IOT");
-//		// 5e26d89d410d2170ad460c95
-//		// trello.assignCardToUser("iotreutlingen", "trinken", "IOT", "To Do");
-//	}
+	// public static void main(String[] args) {
+	// TrelloController trello = new TrelloController();
+	// StringBuilder mStringBuilder;
+	// // trello.createCard("test", "Meine Tasks","IOT");
+	// // Map<String, String> map = trello.listCards("IOT", "Meine Tasks");
+	// // map.forEach((key, value) -> System.out.println(key + ":" + value));
+	// // System.out.println(trello.toString(trello.listCards("IOT", "Meine
+	// // Tasks")));
+	// // trello.moveCardToList("besuch", "fertig", "IOT");
+	// // trello.deleteCard("trinken", "To Do", "IOT");
+	// // trello.listMembers("IOT");
+	// // 5e26d89d410d2170ad460c95
+	// // trello.assignCardToUser("iotreutlingen", "trinken", "IOT", "To Do");
+	// }
 }
