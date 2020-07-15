@@ -32,7 +32,7 @@ public class LaunchRequestHandler implements RequestHandler {
 
 	public Optional<Response> handle(HandlerInput input) {
 
-		String speechText = "IOT Board geöffnet. Was soll ich tun?";
+		String speechText = "Trello Board geöffnet. Was soll ich tun?";
 		return input.getResponseBuilder().withSpeech(speechText).withReprompt(Constant.REPROMT).build();
 	}
 }

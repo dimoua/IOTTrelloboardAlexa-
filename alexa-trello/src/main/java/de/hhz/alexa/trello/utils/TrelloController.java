@@ -280,18 +280,18 @@ public class TrelloController {
 
 	}
 
-	// public static void main(String[] args) {
-	// TrelloController trello = new TrelloController();
-	// StringBuilder mStringBuilder;
-	// // trello.createCard("test", "Meine Tasks","IOT");
-	// // Map<String, String> map = trello.listCards("IOT", "Meine Tasks");
-	// // map.forEach((key, value) -> System.out.println(key + ":" + value));
-	// // System.out.println(trello.toString(trello.listCards("IOT", "Meine
-	// // Tasks")));
-	// // trello.moveCardToList("besuch", "fertig", "IOT");
-	// // trello.deleteCard("trinken", "To Do", "IOT");
-	// // trello.listMembers("IOT");
-	// // 5e26d89d410d2170ad460c95
-	// // trello.assignCardToUser("iotreutlingen", "trinken", "IOT", "To Do");
-	// }
+	 public static void main(String[] args) {
+	 TrelloController trello = new TrelloController();
+	 StringBuilder mStringBuilder;
+	 // trello.createCard("test", "Meine Tasks","IOT");
+	 // Map<String, String> map = trello.listCards("IOT", "Meine Tasks");
+	 // map.forEach((key, value) -> System.out.println(key + ":" + value));
+	 // System.out.println(trello.toString(trello.listCards("IOT", "Meine
+	 // Tasks")));
+	 // trello.moveCardToList("besuch", "fertig", "IOT");
+	  trello.deleteCard("design", "in bearbeitung", "IOT");
+	 // trello.listMembers("IOT");
+	 // 5e26d89d410d2170ad460c95
+	 // trello.assignCardToUser("iotreutlingen", "trinken", "IOT", "To Do");
+	 }
 }

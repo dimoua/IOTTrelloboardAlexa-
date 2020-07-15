@@ -31,7 +31,7 @@ public class AssignTaskIntentHandler implements RequestHandler {
 		
 		try {
 			HttpResponse<String> response = new TrelloController().assignCardToUser(username, task, Constant.BOARD, list);
-		    if(response.getStatus()== HttpStatus.SC_ACCEPTED) {
+		    if(response.getStatus()== HttpStatus.SC_OK) {
 		    	mStringBuilder = new StringBuilder();
 				mStringBuilder.append("Task");
 				mStringBuilder.append(" ");
@@ -46,7 +46,7 @@ public class AssignTaskIntentHandler implements RequestHandler {
 		} catch (Exception e) {
 			mStringBuilder.append("Fehler bei der Zuweisung des Tasks");
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
 	}
 
 

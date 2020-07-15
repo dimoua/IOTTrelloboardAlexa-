@@ -30,7 +30,7 @@ public class MoveTaskIntentHandler implements RequestHandler {
 		
 		try {
 			HttpResponse<String> response = new TrelloController().moveCardToList(task,toList, Constant.BOARD);
-			if (response.getStatus() == HttpStatus.SC_ACCEPTED) {
+			if (response.getStatus() == HttpStatus.SC_OK) {
 				mStringBuilder = new StringBuilder();
 				mStringBuilder.append("Task");
 				mStringBuilder.append(" ");
@@ -56,7 +56,7 @@ public class MoveTaskIntentHandler implements RequestHandler {
 			mStringBuilder.append(" aufgetretten");
 
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
 	}
 
 }

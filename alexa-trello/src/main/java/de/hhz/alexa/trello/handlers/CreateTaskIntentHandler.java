@@ -28,17 +28,17 @@ public class CreateTaskIntentHandler implements RequestHandler {
 		String task = requestHelper.getSlotValue("task").get();
 
 		try {
-			HttpResponse<String> response =new TrelloController().createCard(task, trelloList, Constant.BOARD);
-			if(response.getStatus() == HttpStatus.SC_ACCEPTED) {
-			mStringBuilder = new StringBuilder();
-			mStringBuilder.append("Task");
-			mStringBuilder.append(" ");
-			mStringBuilder.append(task);
-			mStringBuilder.append(" ");
-			mStringBuilder.append("wurde auf ");
-			mStringBuilder.append(trelloList);
-			mStringBuilder.append(" erstellt.");
-			
+			HttpResponse<String> response = new TrelloController().createCard(task, trelloList, Constant.BOARD);
+			if (response.getStatus() == HttpStatus.SC_OK) {
+				mStringBuilder = new StringBuilder();
+				mStringBuilder.append("Task");
+				mStringBuilder.append(" ");
+				mStringBuilder.append(task);
+				mStringBuilder.append(" ");
+				mStringBuilder.append("wurde auf ");
+				mStringBuilder.append(trelloList);
+				mStringBuilder.append(" erstellt.");
+
 			} else {
 				mStringBuilder.append("Task ");
 				mStringBuilder.append(task);
@@ -49,7 +49,7 @@ public class CreateTaskIntentHandler implements RequestHandler {
 			mStringBuilder.append(task);
 			mStringBuilder.append(" könnte nicht erstellt werden");
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
 	}
 
 }

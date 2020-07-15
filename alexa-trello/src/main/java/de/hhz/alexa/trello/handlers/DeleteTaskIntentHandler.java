@@ -31,12 +31,13 @@ public class DeleteTaskIntentHandler implements RequestHandler {
 		
 		try {
 			HttpResponse<String> response = new TrelloController().deleteCard(task, list, Constant.BOARD);
-			if (response.getStatus() == HttpStatus.SC_ACCEPTED) {
+			new TrelloController().deleteCard(task, list, Constant.BOARD);
+			if (response.getStatus() == HttpStatus.SC_OK) {
 				mStringBuilder.append("Task");
 				mStringBuilder.append(" ");
 				mStringBuilder.append(task);
 				mStringBuilder.append(" ");
-				mStringBuilder.append("wurde von");
+				mStringBuilder.append("wurde von ");
 				mStringBuilder.append(list);
 				mStringBuilder.append(" gelöscht.");
 			} else {
@@ -49,13 +50,13 @@ public class DeleteTaskIntentHandler implements RequestHandler {
 
 		} catch (Exception e) {
 			mStringBuilder = new StringBuilder();
-			mStringBuilder.append("Task könnte nicht gelöscht werden");mStringBuilder.append("Task");
+			mStringBuilder.append("Task");
 			mStringBuilder.append(" ");
 			mStringBuilder.append(task);
 			mStringBuilder.append(" ");
 			mStringBuilder.append("könnte nicht gelöscht werden");
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
 	}
 
 }

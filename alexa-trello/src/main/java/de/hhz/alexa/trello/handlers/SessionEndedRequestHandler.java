@@ -29,7 +29,7 @@ public class SessionEndedRequestHandler implements RequestHandler {
     }
 
     public Optional<Response> handle(HandlerInput input) {
-        return input.getResponseBuilder().withSpeech("IOT BOARD schlieﬂ ").build();
+        return input.getResponseBuilder().withSpeech("Trello Board schlieﬂt").build();
     }
 
 }

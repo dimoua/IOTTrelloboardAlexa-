@@ -28,7 +28,7 @@ public class HelpIntentHandler implements RequestHandler {
     }
 
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "sag trello";
+        String speechText = "sag aufgaben";
 
         return input.getResponseBuilder()
                 .withSpeech(speechText)

@@ -22,17 +22,20 @@ public class ListTasksIntentHandler implements RequestHandler {
 
 	public Optional<Response> handle(HandlerInput input) {
 		TrelloController trello = new TrelloController();
-		String speechText = "Deine Aufgaben lauten: ";
 		RequestHelper requestHelper = RequestHelper.forHandlerInput(input);
 		mStringBuilder = new StringBuilder();
-		String trelloList = requestHelper.getSlotValue("liste").get();
+		String trelloList = requestHelper.getSlotValue("list").get();
 		Map<String, String> map = trello.listCards(Constant.BOARD, trelloList);
-		try {
-			mStringBuilder.append(speechText).append(trello.toString(map));
+		mStringBuilder.append("Auf ");
+		mStringBuilder.append(trelloList);
+		mStringBuilder.append(" stehen: ");
 
+
+		try {
+			mStringBuilder.append(trello.toString(map));
 		} catch (Exception e) {
 			mStringBuilder.append(e.getMessage());
 		}
-		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).withReprompt(Constant.REPROMT).build();
+		return input.getResponseBuilder().withSpeech(mStringBuilder.toString()).build();
 	}
 }
